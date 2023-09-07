@@ -7,7 +7,7 @@ const router = express.Router()
 // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const app = express()
-app.use(express.json())
+// app.use(express.json())
  
 // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -61,19 +61,38 @@ router.get( "/users/:id" , (req, res) => {
 // patch == edit
 
 router.patch("/users/:id", async (req, res) => {
+ 
     try {
+        
+        const updats = Object.keys(req.body)
+        console.log(updats); //return arrrray
+
         const _id = req.params.id 
-        const user = await User.findByIdAndUpdate(_id, res.body, {
-            new: true, // to get the new patching 
-            runValidators: true  // to contenuing with validators 
-        })
+
+
+
+        // const user = await User.findByIdAndUpdate(_id, res.body, {
+        //     new: true, // to get the new patching 
+        //     runValidators: true  // to contenuing with validators 
+        // })
+
+
+        const user = await User.findPyId(_id)
+
         if (!user) {
             return res.status(404).send("errorrr 404 no user founded")
         }
+
+        updats.forEach((e) => (
+            user[e] = req.body[e]
+        ))
+        await user.save()
+
+
         res.status(200).send(user)
     }
-     catch (error) {
-          res.status(500).send( error )
+     catch(e) {
+          res.status(400).send(e)
     }
 
 })
@@ -97,11 +116,54 @@ router.delete("/users/:id", async (req, res) => {
 
 // -------------------------------------------------lec 12 ---------
 
+// ---------------------------------lec 13  ...... 07-09-2023 ////////////////////////////////////////
+
+//login
+
+//post to entr data
+
+router.post("/login", async(req, res) => {
+    try {
+        
+        const user = await User.findByCredentials(req.body.email, req.body.password)
+        
+        const token = await user.generateToken()
+
+        res.status(200).send({u: user , t: token})
+        
+    }
+    catch(e){
+        res.status(400).send(e.message)
+    }
+})
+
+///////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////start lec 14 json web
+
+router.post("/users", async (req, res) => {
+    try {
+        const user = new user(req.body);
+        const token = await user.generateToken()
+
+        await user.save()
+    
+        res.status(200).send({user , token})
+        
+    }
+    catch(e) {
+        res.status(400).send(e)
+        
+    }
+})
 
 
 
 
+// //////////////////////////////////////end lec 14
 
+
+// /////////////////////////////////////////////////////////////////////////
 
 module.exports = router; 
 
