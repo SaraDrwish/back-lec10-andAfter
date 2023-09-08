@@ -64,7 +64,7 @@ app.use(userRouter)
 
 // const passwordFunc = async () => {
 //     const pass1 = "zx123456";
-//     const hashPass1 = await bcryptjs.hash (pass1, 8); 
+//     const hashPass1 = await bcryptjs.hash (pass1, 8);
 //     console.log("--pass : " + pass1 + " ----hash:  " + hashPass1 + "   -- end");
 
 //     const comparePass = await bcryptjs.compare( "zx123456", hashPass1);
@@ -72,10 +72,29 @@ app.use(userRouter)
 //     console.log(comparePass)
 // }
  
-// passwordFunc(); 
+// passwordFunc();
 
 
 // ///////////////////////////// end lec 12 /////////////////
+
+
+///////////////////lec 16 relations
+
+const Task = require("./models/task");
+
+const relationFunc = async () => {
+    const task = await Task.findById("5226s5ds55d5sd55sd5s656");
+    await task.populate("owner")
+    console.log(task);
+    console.log(task.owner);
+    
+}
+relationFunc()
+
+
+
+
+
 
 
 app.listen(port, () => {

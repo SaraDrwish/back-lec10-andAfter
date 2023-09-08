@@ -35,8 +35,11 @@ router.post("/taskes",auth , async(req, res) => {
 router.get("/taskes",auth , async(req, res) => {
     
     try {
-        const tasks =  await Task.find({}) 
-        res.status(200).send(tasks)
+        // const tasks =  await Task.find({})
+        // res.status(200).send(tasks)
+        await req.user.populate("tasks");
+        res.status(200).send(req.user.tasks)
+
     }
     catch (e) {
         res.status(500).send(e.message)
@@ -82,7 +85,9 @@ router.patch("/taskes/:id",auth , async(req, res) => {
         if (!task) {
             return  res.status(404).send("no task ")
         }
+        await task.populate("owner")
         res.send(task)
+
     }
     catch (e) {
         res.status(500).send(e.message)

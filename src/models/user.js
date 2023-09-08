@@ -112,6 +112,23 @@ const userSchema = new mongoose.Schema({
 
 } )
 
+
+
+
+// lec16 start
+
+//virual relations
+
+userSchema.virtual("tasks", {
+    ref: "Task" , //model
+    localField: "_id",
+    foreignField:"owner"
+})
+
+//lec16 end 
+
+
+
 // hashing func before sending it ------
 
 userSchema.pre("save", async function() {
