@@ -2,6 +2,8 @@
 const express = require("express")
 const User = require("../models/user")
 
+const auth = require("../db/middleware/auth");
+
 const router = express.Router()
 
 // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -99,7 +101,7 @@ router.patch("/users/:id", async (req, res) => {
 
 //////////////////////////////////////
 
-router.delete("/users/:id", async (req, res) => {
+router.delete("/users/:id",auth , async (req, res) => {
     try {
         const _id = req.params.id
         const user = await User.findByIdAndDelete(_id)
@@ -122,7 +124,7 @@ router.delete("/users/:id", async (req, res) => {
 
 //post to entr data
 
-router.post("/login", async(req, res) => {
+router.post("/login", auth ,async(req, res) => {
     try {
         
         const user = await User.findByCredentials(req.body.email, req.body.password)
@@ -141,7 +143,7 @@ router.post("/login", async(req, res) => {
 
 ////////////////////////////start lec 14 json web
 
-router.post("/users", async (req, res) => {
+router.post("/users", auth , async (req, res) => {
     try {
         const user = new user(req.body);
         const token = await user.generateToken()
@@ -206,9 +208,6 @@ router.delete("/logoutAll", auth, async (req, res) => {
 })
 
 // //////////////////////////////////////end lec 15
-
-
-
 
 // /////////////////////////////////////////////////////////////////////////
 

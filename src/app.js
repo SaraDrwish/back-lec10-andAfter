@@ -54,6 +54,10 @@ const port = process.env.PORT || 3000;
 const userRouter = require("./routers/user");
 app.use(userRouter)
 
+
+// const taskRouter = require("./routers/task");
+// app.use(taskRouter)
+
 // --------------------------------lec 12 ----------------------------------------------------
 
 // const bcryptjs = require("bcryptjs")
@@ -75,7 +79,7 @@ app.use(userRouter)
 
 
 app.listen(port, () => {
-    console.log("all done .......023-08-26...lec 11 + .... 12  + 13   ")
+    console.log("all done .......023-08-26...lec 11 + .... 12  + 13 +14 +15  ")
 })
 
 
