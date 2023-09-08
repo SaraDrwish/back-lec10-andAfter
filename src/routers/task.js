@@ -17,7 +17,7 @@ const router = express.Router();
 router.post("/taskes",auth , async(req, res) => {
     
     try {
-        const task = new Task(req.body);
+        const task = new Task({...req.body , owner: req.user.id});
         await task.save();
         res.status(200).send(task)
     }
@@ -51,9 +51,11 @@ router.get("/taskes",auth , async(req, res) => {
 router.get("/taskes/:id",auth , async(req, res) => {
     
     try {
-        const tasks = await Task.findById(req.params.id) 
+        // const tasks = await Task.findById(req.params.id) 
+        const id = req.params.id
+        const task = await Task.findOne( {_id:id , owner:req.user._id})
         if (!task) {
-            return  res.status(404).send("cant find id ")
+            return  res.status(404).send("wrong task")
         }
         res.send(task)
     }
@@ -72,7 +74,8 @@ router.patch("/taskes/:id",auth , async(req, res) => {
     
     try {
         const _id = req.params.id
-        const tasks = await Task.findByIdAndUpdate({ _id }, req.body, {
+        const tasks = await Task.findOneAndUpdate({_id , owner:req.user._id} , req.body, {
+        // const tasks = await Task.findByIdAndUpdate({ _id }, req.body, {
             new: true,
             runvalidators:true
         }) 
@@ -96,7 +99,10 @@ router.delete("/taskes/:id",auth , async(req, res) => {
     
     try {
 
-       const tasks = await Task.findByIdAndDelete(req.params.id) 
+       const id = req.params.id
+
+       const tasks = await Task.findOneAndDelete({_id:id , owner:req.user._id}  ) 
+    //    const tasks = await Task.findByIdAndDelete(req.params.id) 
 
         if (!task) {
                res.status(404).send("no task ")
