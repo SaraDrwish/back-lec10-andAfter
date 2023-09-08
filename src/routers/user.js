@@ -163,6 +163,53 @@ router.post("/users", async (req, res) => {
 // //////////////////////////////////////end lec 14
 
 
+
+// /////////////////////////start lec 15
+
+//profile ...
+
+router.get("/profile", auth, async (req, res) => {
+   
+       res.status(200).send(req.user)
+   
+} )
+
+// logout ...
+
+router.delete("/logout", auth, async (req, res) => {
+    try {
+        console.log(req.user);
+        req.user.tokens = req.user.tokens.filter((el) => {
+            return el !== req.token
+        })
+        await req.user.save()
+        res.send()
+    }
+    catch (e) {
+       res.status(500).send(e)
+    }
+})
+
+// logout all
+
+
+router.delete("/logoutAll", auth, async (req, res) => {
+    try {
+        console.log(req.user);
+        req.user.tokens = []
+        req.user.save()
+        res.send()
+    }
+    catch (e) {
+       res.status(500).send(e)
+    }
+})
+
+// //////////////////////////////////////end lec 15
+
+
+
+
 // /////////////////////////////////////////////////////////////////////////
 
 module.exports = router; 
